@@ -25,7 +25,10 @@ module Rails
       end
 
       def self.new(name, config)
-        klass = lookup_class(config['adapter'])
+        adapter = config['adapter']
+        adapter ||= Addressable::URI.parse(config['uri']).scheme if config['uri']
+
+        klass = lookup_class(adapter)
         if klass.equal?(self)
           super(name, config)
         else
